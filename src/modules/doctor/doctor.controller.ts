@@ -4,30 +4,34 @@ import { uuid } from 'uuidv4';
 import { DoctorService } from './doctor.service';
 import { doctorRequestDto } from './doctor.dto';
 import { success } from 'src/utils/constants/global.constants';
+import { Auth } from '../user/decorators/auth.decorator';
+import { ValidRoles } from '../user/interfaces/valid-roles';
 
 @Controller('doctor')
+@Auth()
 export class DoctorController {
   constructor(private doctorService: DoctorService) { }	
 
-
   @Post()
+  @Auth(ValidRoles.admin)
   async createDoctor(
     @Body() body: doctorRequestDto,
   ) {
-    try {
-      body.id = uuid();
-      this.doctorService.createDoctor(body);
-    } catch (error) {
-      console.log(error)
+    const data = await this.doctorService.createDoctor(body)
+    return {
+      message: success.OK,
+      statusCode: 200,
+      data,
     }
   }
 
   @Get()
   async findAllDoctors() {
-    try {
-      return this.doctorService.getDoctors();
-    } catch (error) {
-      console.log(error)
+    const data = await this.doctorService.getDoctors()
+    return {
+      message: success.OK,
+      statusCode: 200,
+      data,
     }
   }
 

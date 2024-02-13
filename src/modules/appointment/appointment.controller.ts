@@ -13,8 +13,10 @@ import { appointmentRequestDto } from './appointment.dto';
 import { AppointmentService } from './appointment.service';
 import { ApiResponse } from 'src/db/entities/response.dto';
 import { success } from 'src/utils/constants/global.constants';
+import { Auth } from '../user/decorators/auth.decorator';
 
 @Controller('appointment')
+@Auth()
 export class AppointmentController {
   constructor(private appointmentService: AppointmentService) {}
 

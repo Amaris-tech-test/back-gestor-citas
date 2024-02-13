@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Specialties } from 'src/db/entities/specialty.entity';
 import { Repository } from 'typeorm';
@@ -18,7 +18,7 @@ export class SpecialtyService {
       const specialty = this.specialtiesRepository.create(specialtyInput);
       return await this.specialtiesRepository.save(specialty)
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -26,7 +26,7 @@ export class SpecialtyService {
     try {
       return await this.specialtiesRepository.find();
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

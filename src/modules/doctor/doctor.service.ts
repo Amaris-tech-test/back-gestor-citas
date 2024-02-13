@@ -1,4 +1,4 @@
-import { Injectable, Param, ParseUUIDPipe } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Param, ParseUUIDPipe } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Doctors } from 'src/db/entities/doctor.entity';
 import { Repository } from 'typeorm';
@@ -14,7 +14,7 @@ export class DoctorService {
     try {
       return await this.doctorRepository.save(doctor);
     } catch (error) {
-      console.log(error)
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -22,7 +22,7 @@ export class DoctorService {
     try {
       return await this.doctorRepository.find();
     } catch (error) {
-      console.log(error)
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -34,7 +34,7 @@ export class DoctorService {
       return infoDoctors;
 
     } catch (error) {
-      
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
