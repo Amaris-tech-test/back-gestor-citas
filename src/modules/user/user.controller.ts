@@ -14,7 +14,8 @@ export class UserController {
   constructor(private userService: UserService) { }	
 
   @Post()
-  async createDoctor(
+  @Auth( ValidRoles.admin )
+  async createUser(
     @Body() createUserDto: createUserDto,
   ) {
     const data = await this.userService.createUser(createUserDto);
@@ -34,18 +35,6 @@ export class UserController {
       message: success.OK,
       statusCode: 200,
       data,
-    }
-  }
-
-  @Get('private3')
-  @Auth( ValidRoles.admin )
-  privateRoute3(
-    @GetUser() user: Users
-  ) {
-
-    return {
-      ok: true,
-      user
     }
   }
 

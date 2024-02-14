@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { uuid } from 'uuidv4';
 
-import { appointmentRequestDto } from './appointment.dto';
+import { appointmentRequestDto, appointmentUpdateRequestDto } from './appointment.dto';
 import { AppointmentService } from './appointment.service';
 import { ApiResponse } from 'src/db/entities/response.dto';
 import { success } from 'src/utils/constants/global.constants';
@@ -48,7 +48,7 @@ export class AppointmentController {
   @Put('update/:appointmentId')
   async updateAppointment(
     @Param('appointmentId', new ParseUUIDPipe()) appointmentId:string,
-    @Body() appointmentData: appointmentRequestDto
+    @Body() appointmentData: appointmentUpdateRequestDto
   ): Promise<any> {
     const data = await this.appointmentService.updateAppointment(appointmentId, appointmentData)
     return {

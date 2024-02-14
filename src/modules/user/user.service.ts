@@ -32,6 +32,7 @@ export class UserService {
         password: bcrypt.hashSync(password, 10),
       });
       await this.userRepository.save(user);
+     
       delete user.password;
 
       return {
@@ -60,11 +61,11 @@ export class UserService {
       throw new UnauthorizedException(`Password is not valid `);
     }
 
+    delete user.password;
     return {
       ...user,
       token: this.getJwtToken({ _id: user.id }),
     };
-    //TODO: Retornar el JWT de acceso
   }
 
   private getJwtToken(payload: JWTPayload) {

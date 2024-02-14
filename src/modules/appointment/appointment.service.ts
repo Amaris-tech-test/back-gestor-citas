@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { appointmentRequestDto } from './appointment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Appointments } from 'src/db/entities/appointment.entity';
 import { Repository } from 'typeorm';
@@ -13,6 +12,20 @@ export class AppointmentService {
 
   async createAppointment(appointment: any) {
     try {
+      const existingAppointment = await this.appointmentRepository.findOne({
+        where: {
+          doctor: appointment.doctorId,
+          appointmentDate: appointment.appointmentDate,
+        },
+      });
+
+      if (existingAppointment) {
+        throw new HttpException(
+          'El doctor ya tiene una cita agendada en este horario',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
       return await this.appointmentRepository.save(appointment);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -33,9 +46,12 @@ export class AppointmentService {
           'appointment.appointmentDate',
           'doctor.name',
           'doctor.lastname',
+          'doctor.id',
           'specialty.specialty',
+          'specialty.id',
           'user.name',
           'user.lastname',
+          
         ])
         .getMany();
       return appointments;
@@ -43,6 +59,8 @@ export class AppointmentService {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+
 
   async updateAppointment(
     appointmentId: any,
